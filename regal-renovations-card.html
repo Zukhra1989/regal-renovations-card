@@ -8,6 +8,12 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
       background: #0a0a0a;
@@ -17,10 +23,21 @@
       min-height: 100vh;
     }
 
+    .card-outer {
+      width: 100vmin;
+      height: 100vmin;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
     .card {
       width: 1080px;
       height: 1080px;
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -318,6 +335,7 @@
   </style>
 </head>
 <body>
+  <div class="card-outer">
   <div class="card">
     <!-- Анимированный фон -->
     <canvas id="bgCanvas"></canvas>
@@ -495,6 +513,14 @@
       requestAnimationFrame(loop);
     }
     loop();
+
+    function scaleCard() {
+      var s = Math.min(window.innerWidth, window.innerHeight) / 1080;
+      document.querySelector('.card').style.transform = 'scale(' + s + ')';
+    }
+    scaleCard();
+    window.addEventListener('resize', scaleCard);
   </script>
+  </div>
 </body>
 </html>
