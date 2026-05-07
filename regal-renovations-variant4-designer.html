@@ -8,6 +8,12 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
       background: #111;
@@ -20,6 +26,8 @@
     .card {
       width: 1080px;
       height: 1080px;
+      transform: scale(calc(100vmin / 1080));
+      transform-origin: center center;
       position: relative;
       overflow: hidden;
     }
