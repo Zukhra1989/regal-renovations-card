@@ -11,24 +11,28 @@
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden;
-    }
-
-    body {
-      font-family: 'Montserrat', sans-serif;
       background: #111;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .card-outer {
+      width: 100vmin;
+      height: 100vmin;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
     .card {
       width: 1080px;
       height: 1080px;
-      transform: scale(calc(100vmin / 1080));
-      transform-origin: center center;
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
       overflow: hidden;
     }
 
@@ -271,6 +275,7 @@
   </style>
 </head>
 <body>
+  <div class="card-outer">
   <div class="card">
     <div class="bg-photo"></div>
     <div class="overlay"></div>
@@ -328,5 +333,14 @@
 
     </div>
   </div>
+  </div>
+  <script>
+    function scaleCard() {
+      var s = Math.min(window.innerWidth, window.innerHeight) / 1080;
+      document.querySelector('.card').style.transform = 'scale(' + s + ')';
+    }
+    scaleCard();
+    window.addEventListener('resize', scaleCard);
+  </script>
 </body>
 </html>
