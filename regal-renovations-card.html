@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regal Renovations B.V.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0a0a0a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      width: 1080px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 70px 80px;
+    }
+
+    /* Canvas фон */
+    #bgCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    /* Тёмный оверлей поверх canvas */
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(145deg, rgba(5,5,5,0.82) 0%, rgba(15,10,10,0.78) 50%, rgba(5,5,5,0.85) 100%);
+      z-index: 1;
+    }
+
+    /* Плавающие инструменты */
+    .tool-icon {
+      position: absolute;
+      opacity: 0.07;
+      z-index: 2;
+      animation: floatTool linear infinite;
+      filter: drop-shadow(0 0 6px rgba(192,48,48,0.3));
+    }
+
+
+    .accent-line-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #7B1A1A, #c03030, #7B1A1A, transparent);
+    }
+
+    .accent-line-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #7B1A1A, #c03030, #7B1A1A, transparent);
+    }
+
+    /* Весь контент поверх canvas */
+    .header, .services-section, .contacts-section, .footer-line,
+    .accent-line-top, .accent-line-bottom {
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+
+    .logo-icon {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.92);
+      padding: 6px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .company-name {
+      font-size: 36px;
+      font-weight: 700;
+      color: #7B1A1A;
+      letter-spacing: 10px;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .company-name .line2 {
+      font-size: 23px;
+      font-weight: 600;
+      color: #7B1A1A;
+      letter-spacing: 6px;
+      display: block;
+    }
+
+    .company-name .line3 {
+      font-size: 11px;
+      font-weight: 500;
+      color: #7B1A1A;
+      letter-spacing: 8px;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .company-sub {
+      display: none;
+    }
+
+    .divider {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, #7B1A1A, transparent);
+      margin: 28px 0;
+    }
+
+    /* Слоган */
+    .tagline {
+      font-size: 14px;
+      font-weight: 300;
+      color: #aaa;
+      letter-spacing: 1px;
+      font-style: italic;
+    }
+
+    /* Центр — услуги */
+    .services-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #c03030;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .service-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(123, 26, 26, 0.35);
+      border-radius: 8px;
+    }
+
+    .service-dot {
+      width: 6px;
+      height: 6px;
+      background: #c03030;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .service-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: #e0e0e0;
+      line-height: 1.3;
+    }
+
+    /* Контакты */
+    .contacts-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(123, 26, 26, 0.15);
+      border: 1px solid rgba(123, 26, 26, 0.35);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #c03030;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .contact-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e8e8e8;
+    }
+
+    .call-btn {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 5px 14px;
+      background: #7B1A1A;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 20px;
+      border: 1px solid #c03030;
+    }
+
+    .website-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 12px 28px;
+      background: transparent;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 30px;
+      border: 2px solid #c03030;
+      transition: background 0.2s;
+    }
+
+    /* Нижняя полоска */
+    .footer-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+      margin-top: 10px;
+    }
+
+    .quality-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .quality-badge::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: #555;
+    }
+
+    .quality-badge::after {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- Анимированный фон -->
+    <canvas id="bgCanvas"></canvas>
+    <div class="overlay"></div>
+
+    <div class="accent-line-top"></div>
+    <div class="accent-line-bottom"></div>
+
+    <!-- Шапка -->
+    <div class="header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <img src="logo.png" alt="Regal Renovations Logo" />
+        </div>
+        <div>
+          <div class="company-name">
+            REGAL
+            <span class="line2">RENOVATIONS</span>
+            <span class="line3">COMPANY &nbsp;·&nbsp; B.V.</span>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="tagline">Quality you can see — Excellence in every detail</div>
+    </div>
+
+    <!-- Services -->
+    <div class="services-section">
+      <div class="section-label">Our Services</div>
+      <div class="services-grid">
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Complete house renovation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Bathroom renovation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">WC (toilet) renovation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Plumbing work</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Plasterwork</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Tilework</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Laying laminate</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Painting work</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Carpentry</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Installation of plasterboards</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Kitchen installation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Electrics</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Glass and facade</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Wood repair</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Insulation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Staircase renovation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Customized cabinets</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-text">Furniture assembly</div></div>
+      </div>
+    </div>
+
+    <!-- Contacts -->
+    <div class="contacts-section">
+      <div class="section-label">Contact Us</div>
+      <div class="contacts-grid">
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-info">
+            <div class="contact-label">Phone</div>
+            <div class="contact-value">06 49 07 99 25</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">💬</div>
+          <div class="contact-info">
+            <div class="contact-label">WhatsApp</div>
+            <div class="contact-value">068 42 89 630</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-info">
+            <div class="contact-label">E-mail</div>
+            <div class="contact-value">regalrenovationsbv@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📸</div>
+          <div class="contact-info">
+            <div class="contact-label">Instagram</div>
+            <a class="contact-value" href="https://www.instagram.com/renovationsregal" target="_blank" style="color:#e8e8e8;text-decoration:none;">@renovationsregal</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-line">
+      <div class="quality-badge">Premium Quality</div>
+      <a class="website-btn" href="https://regalrenovations.nl" target="_blank">🌐 Visit our website</a>
+    </div>
+  </div>
+  <script>
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width  = 1080;
+    canvas.height = 1080;
+
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // Параметры паркетного узора (диагональные плитки)
+    const TILE = 80;       // размер ромба
+    let   time = 0;
+
+    function drawParquet() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Тёмный фон
+      ctx.fillStyle = '#0c0808';
+      ctx.fillRect(0, 0, W, H);
+
+      // Диагональная сетка ромбов
+      const cols = Math.ceil(W / TILE) + 3;
+      const rows = Math.ceil(H / TILE) + 3;
+
+      for (let r = -2; r < rows; r++) {
+        for (let c = -2; c < cols; c++) {
+          const cx = c * TILE + (r % 2) * (TILE / 2);
+          const cy = r * (TILE * 0.58);
+
+          // Пульсирующий блеск каждой плитки
+          const wave  = Math.sin(time * 0.6 + r * 0.4 + c * 0.5) * 0.5 + 0.5;
+          const alpha = 0.06 + wave * 0.10;
+
+          // Сама ромбовидная плитка
+          ctx.beginPath();
+          ctx.moveTo(cx,           cy - TILE * 0.35);
+          ctx.lineTo(cx + TILE * 0.48, cy);
+          ctx.lineTo(cx,           cy + TILE * 0.35);
+          ctx.lineTo(cx - TILE * 0.48, cy);
+          ctx.closePath();
+
+          // Градиент внутри плитки
+          const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, TILE * 0.5);
+          grad.addColorStop(0,   `rgba(180,40,40,${alpha + 0.05})`);
+          grad.addColorStop(0.6, `rgba(120,20,20,${alpha})`);
+          grad.addColorStop(1,   `rgba(60,5,5,0)`);
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Контур плитки
+          ctx.strokeStyle = `rgba(140,30,30,${0.12 + wave * 0.08})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+
+          // Маленький блик в центре
+          if (wave > 0.85) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,120,120,${(wave - 0.85) * 1.5})`;
+            ctx.fill();
+          }
+        }
+      }
+
+      // Плавные диагональные линии (имитация досок паркета)
+      ctx.save();
+      ctx.translate(W / 2, H / 2);
+      ctx.rotate(Math.PI / 4);
+      const lineAlpha = 0.04 + Math.sin(time * 0.3) * 0.02;
+      ctx.strokeStyle = `rgba(160,50,50,${lineAlpha})`;
+      ctx.lineWidth = 1;
+      for (let i = -20; i < 20; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * 60, -800);
+        ctx.lineTo(i * 60,  800);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function loop() {
+      time += 0.03;
+      drawParquet();
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
+</body>
+</html>

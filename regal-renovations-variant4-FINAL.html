@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regal Renovations B.V.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      width: 1080px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes zoomInOut {
+      0%   { transform: scale(1.0); }
+      50%  { transform: scale(1.08); }
+      100% { transform: scale(1.0); }
+    }
+
+    .bg-photo {
+      position: absolute;
+      inset: 0;
+      background-image: url('room.jpg');
+      background-size: cover;
+      background-position: center;
+      animation: zoomInOut 14s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(8,5,3,0.90) 0%,
+        rgba(8,5,3,0.52) 35%,
+        rgba(8,5,3,0.58) 65%,
+        rgba(8,5,3,0.94) 100%
+      );
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 70px 90px;
+    }
+
+    /* ШАПКА */
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .logo-wrap {
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.93);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+
+    .logo-wrap img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      color: #c8282a;
+      text-transform: uppercase;
+    }
+
+    .brand-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      font-style: italic;
+      color: #f0ece6;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    /* ЦЕНТР */
+    .middle {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .watermark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 120px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.05);
+      letter-spacing: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+      margin-bottom: -20px;
+      user-select: none;
+    }
+
+    .divider-line {
+      width: 50px;
+      height: 2px;
+      background: #c8282a;
+      margin: 24px 0 18px;
+    }
+
+    .services-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      color: #c8282a;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .services-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 80px;
+      list-style: none;
+    }
+
+    .services-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #e0e0e0;
+      letter-spacing: 0.3px;
+    }
+
+    .services-list li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: #c8282a;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .more-line {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #bbb;
+      letter-spacing: 1.5px;
+      font-style: italic;
+    }
+
+    /* НИЗ */
+    .bottom {
+      border-top: 1px solid rgba(255,255,255,0.10);
+      padding-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .contacts-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .phone-main {
+      font-size: 34px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #bbb;
+    }
+
+    .contact-row .ic { color: #c8282a; font-size: 13px; }
+
+    .contacts-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 14px;
+    }
+
+    .website-btn {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #fff;
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 12px 26px;
+      border: 1px solid rgba(200,40,42,0.7);
+      border-radius: 30px;
+    }
+
+    .contact-btn {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 12px 26px;
+      background: #c8282a;
+      border-radius: 30px;
+      border: none;
+    }
+
+    .insta-link {
+      font-size: 12px;
+      color: #bbb;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .bottom-accent {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #c8282a, transparent);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="bg-photo"></div>
+    <div class="overlay"></div>
+    <div class="bottom-accent"></div>
+
+    <div class="content">
+
+      <!-- ШАПКА -->
+      <div class="top">
+        <div class="logo-wrap">
+          <img src="logo.png" alt="Regal Renovations" />
+        </div>
+        <div class="brand">
+          <div class="brand-name">Regal Renovations · B.V.</div>
+          <div class="brand-tagline">Quality you can see</div>
+        </div>
+      </div>
+
+      <!-- ЦЕНТР -->
+      <div class="middle">
+        <div class="watermark">Renovation</div>
+
+        <div class="divider-line"></div>
+        <div class="services-label">Our Services</div>
+
+        <ul class="services-list">
+          <li>Complete House Renovation</li>
+          <li>Kitchen Installation</li>
+          <li>Bathroom &amp; WC Renovation</li>
+          <li>Electrics &amp; Plumbing</li>
+          <li>Tilework &amp; Plasterwork</li>
+          <li>Customized Cabinets</li>
+          <li>Flooring &amp; Painting</li>
+          <li>Glass &amp; Facade</li>
+        </ul>
+
+        <div class="more-line">+ Staircase · Insulation · Carpentry · Wood repair · and more</div>
+      </div>
+
+      <!-- КОНТАКТЫ -->
+      <div class="bottom">
+        <div class="contacts-left">
+          <div class="phone-main">06 49 07 99 25</div>
+          <div class="contact-row"><span class="ic">💬</span> WhatsApp: 068 42 89 630</div>
+          <div class="contact-row"><span class="ic">✉️</span> regalrenovationsbv@gmail.com</div>
+          <div class="contact-row"><span class="ic">📸</span> @renovationsregal</div>
+        </div>
+
+        <div class="contacts-right">
+          <a class="contact-btn" href="tel:+31649079925">📞 Contact us</a>
+          <a class="website-btn" href="https://regalrenovations.nl" target="_blank">🌐 Visit our website</a>
+          <a class="insta-link" href="https://www.instagram.com/renovationsregal" target="_blank">instagram.com/renovationsregal</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
