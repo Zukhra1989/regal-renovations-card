@@ -26,7 +26,6 @@
     .card-outer {
       width: 100vmin;
       height: 100vmin;
-      position: relative;
       overflow: hidden;
       flex-shrink: 0;
     }
@@ -34,15 +33,12 @@
     .card {
       width: 1080px;
       height: 1080px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transform-origin: top left;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 70px 80px;
+      transform-origin: top left;
     }
 
     /* Фото-фон с анимацией зума */
@@ -428,7 +424,7 @@
   <script>
     function scaleCard() {
       var s = Math.min(window.innerWidth, window.innerHeight) / 1080;
-      document.querySelector('.card').style.transform = 'scale(' + s + ')';
+      document.querySelector('.card').style.zoom = s;
     }
     scaleCard();
     window.addEventListener('resize', scaleCard);
