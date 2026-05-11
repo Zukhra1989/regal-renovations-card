@@ -14,7 +14,7 @@ const fs = require('fs');
 
   const page = await context.newPage();
 
-  const filePath = 'file:///' + path.resolve(__dirname, 'regal-renovations-variant4-designer.html').replace(/\\/g, '/');
+  const filePath = 'file:///' + path.resolve(__dirname, 'regal-renovations-READY.html').replace(/\\/g, '/');
   await page.goto(filePath);
 
   // Wait for fonts and image to load
@@ -29,7 +29,7 @@ const fs = require('fs');
   await browser.close();
 
   // Rename to a clear name
-  const outputPath = path.join(__dirname, 'regal-renovations.webm');
+  const outputPath = path.join(__dirname, 'regal-renovations-READY.webm');
   if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
   fs.renameSync(videoPath, outputPath);
 
